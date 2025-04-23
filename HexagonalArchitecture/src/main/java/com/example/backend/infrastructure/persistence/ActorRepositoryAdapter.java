@@ -1,6 +1,7 @@
 package com.example.backend.infrastructure.persistence;
 
 import com.example.backend.core.application.ports.outbound.ActorRepository;
+import com.example.backend.core.domain.model.Actor;
 import com.example.backend.infrastructure.persistence.mapper.ActorEntityMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -17,12 +18,12 @@ public class ActorRepositoryAdapter implements ActorRepository {
     private final ActorEntityMapper mapper;
 
     @Override
-    public Optional<com.example.backend.core.domain.model.Actor> findById(Long id) {
+    public Optional<Actor> findById(Long id) {
         return jpa.findById(id).map(mapper::toDomain);
     }
 
     @Override
-    public com.example.backend.core.domain.model.Actor save(com.example.backend.core.domain.model.Actor actor) {
+    public Actor save(Actor actor) {
         return mapper.toDomain(jpa.save(mapper.toEntity(actor)));
     }
 
@@ -37,7 +38,7 @@ public class ActorRepositoryAdapter implements ActorRepository {
     }
 
     @Override
-    public List<com.example.backend.core.domain.model.Actor> findByFilter(String lastName, LocalDateTime lastUpdated, Long actorId) {
+    public List<Actor> findByFilter(String lastName, LocalDateTime lastUpdated, Long actorId) {
         return jpa.getFilteredActors(lastName, lastUpdated, actorId)
                 .stream()
                 .map(mapper::toDomain)
